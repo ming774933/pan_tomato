@@ -4,10 +4,10 @@
 #include <TFT_eSPI.h>
 #include <lvgl.h>
 #include <RTClib.h>
-#include <WiFi.h>          
-#include <Preferences.h>   
+#include <WiFi.h>
+#include <Preferences.h>
 
-#include "ui/ui.h" 
+#include "ui/ui.h"
 
 // --- 使用者設定 ---
 const char* ssid     = "TP-LINK_E1C0";
@@ -15,45 +15,45 @@ const char* password = "88888888";
 
 // --- 硬體腳位設定 ---
 #define TFT_BLK     27
-#define BUZZER_PIN  25   
-#define BTN_PREV    13   
-#define BTN_NEXT    12   
-#define BTN_ENTER   14   
+#define BUZZER_PIN  25
+#define BTN_PREV    13
+#define BTN_NEXT    12
+#define BTN_ENTER   14
 
 // --- PWM 設定 ---
-#define PWM_CH_BLK      0  
-#define PWM_CH_BUZZ     1  
+#define PWM_CH_BLK      0
+#define PWM_CH_BUZZ     1
 #define PWM_FREQ        5000
 #define PWM_RES         8
 
 // --- 物件宣告 ---
-TFT_eSPI tft = TFT_eSPI(); 
+TFT_eSPI tft = TFT_eSPI();
 RTC_DS3231 rtc;
-Preferences prefs; 
+Preferences prefs;
 
 // --- LVGL 緩衝區 ---
 static const uint16_t screenWidth  = 160;
 static const uint16_t screenHeight = 128;
 static lv_disp_draw_buf_t draw_buf;
-static lv_color_t buf[ screenWidth * 40 ]; 
-lv_group_t * g_btn_group; 
+static lv_color_t buf[ screenWidth * 40 ];
+lv_group_t * g_btn_group;
 
 // --- 變數宣告 ---
-lv_obj_t * current_focused_panel = NULL; 
+lv_obj_t * current_focused_panel = NULL;
 
 bool isTimerRunning = false;
 bool isTimerPaused = false;
-long totalSeconds = 300;     
-long remainingSeconds = 300; 
+long totalSeconds = 300;
+long remainingSeconds = 300;
 unsigned long lastTimerTick = 0;
-long initialTotalSeconds = 0; 
+long initialTotalSeconds = 0;
 
 bool isStopwatchRunning = false;
 long stopwatchSeconds = 0;
 unsigned long lastStopwatchTick = 0;
 
-int screenBrightness = 200; 
-int systemVolume = 150;     
+int screenBrightness = 200;
+int systemVolume = 150;
 unsigned long lastClockUpdate = 0;
 
 unsigned long buzzerStartTime = 0;
@@ -69,35 +69,35 @@ void my_keypad_read(lv_indev_drv_t * indev_driver, lv_indev_data_t * data);
 void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p);
 void update_clock();
 void update_timer_ui();
-void update_stopwatch_ui(); 
-void trigger_buzzer(int durationMs); 
-long parse_dropdown_time(const char* str); 
+void update_stopwatch_ui();
+void trigger_buzzer(int durationMs);
+long parse_dropdown_time(const char* str);
 
-void check_and_update_focus(); 
+void check_and_update_focus();
 void apply_group_focus(lv_obj_t * panel);
 void ui_event_auto_next(lv_event_t * e);
 
 void confirm_settings_logic(lv_event_t * e);
-void confirm_time_set_logic(lv_event_t * e); 
-void stop_timer_logic(lv_event_t * e);        
-void reset_and_run_logic(lv_event_t * e);     
-void exit_timer_logic(lv_event_t * e);        
-void rest_timer_logic(lv_event_t * e);        
+void confirm_time_set_logic(lv_event_t * e);
+void stop_timer_logic(lv_event_t * e);
+void reset_and_run_logic(lv_event_t * e);
+void exit_timer_logic(lv_event_t * e);
+void rest_timer_logic(lv_event_t * e);
 
-void toggle_stopwatch_logic(lv_event_t * e); 
-void reset_stopwatch_logic(lv_event_t * e);  
-void exit_stopwatch_logic(lv_event_t * e);   
+void toggle_stopwatch_logic(lv_event_t * e);
+void reset_stopwatch_logic(lv_event_t * e);
+void exit_stopwatch_logic(lv_event_t * e);
 
 void slider_brightness_event(lv_event_t * e);
 void slider_volume_event(lv_event_t * e);
 void run_splash_bar_animation();
-void play_button_sound(); 
+void play_button_sound();
 
 // 歷史紀錄相關
 void save_daily_data(int focusAddSec, int restAddSec);
 void load_history_to_ui(int year, int month, int day);
 void load_history_from_dropdown(lv_event_t * e);
-void handle_wifi_sync_in_loop(); // [新增] 在 Loop 中處理 WiFi
+void handle_wifi_sync_in_loop();
 
 // ----------------------------------------------------------------
 // Setup
@@ -111,17 +111,17 @@ void setup() {
 
     ledcSetup(PWM_CH_BLK, PWM_FREQ, PWM_RES);
     ledcAttachPin(TFT_BLK, PWM_CH_BLK);
-    ledcWrite(PWM_CH_BLK, screenBrightness); 
+    ledcWrite(PWM_CH_BLK, screenBrightness);
 
-    ledcSetup(PWM_CH_BUZZ, 2000, PWM_RES); 
+    ledcSetup(PWM_CH_BUZZ, 2000, PWM_RES);
     ledcAttachPin(BUZZER_PIN, PWM_CH_BUZZ);
-    ledcWrite(PWM_CH_BUZZ, 0); 
+    ledcWrite(PWM_CH_BUZZ, 0);
 
     if (!rtc.begin()) { Serial.println("Couldn't find RTC"); }
     
     // 確保有初始時間 (若 RTC 掉電)
-    if (rtc.lostPower()) { 
-        rtc.adjust(DateTime(F(__DATE__), F(__TIME__))); 
+    if (rtc.lostPower()) {
+        rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
     }
 
     tft.begin();
@@ -165,7 +165,6 @@ void setup() {
     
     run_splash_bar_animation();
 
-    // [修正1] 不在這裡等待 WiFi，改在 Loop 背景執行，避免卡動畫
     // 先啟動 WiFi 連線，但不等待
     WiFi.begin(ssid, password);
     wifiStartTime = millis();
@@ -228,36 +227,31 @@ void setup() {
         if(ui_Label16) lv_label_set_text_fmt(ui_Label16, "%d", initVal);
     }
     
-    // 先用 DS3231 更新一次時間
     update_clock();
 }
 
 // ----------------------------------------------------------------
-// [修正1] 在 Loop 中處理 WiFi，避免 Setup 卡頓
+// Loop
 // ----------------------------------------------------------------
 void handle_wifi_sync_in_loop() {
-    if (wifiSyncAttempted) return; // 已經嘗試過(成功或超時)，不再執行
+    if (wifiSyncAttempted) return;
 
-    // 檢查是否連上
     if (WiFi.status() == WL_CONNECTED) {
         Serial.println("WiFi Connected! Syncing NTP...");
         configTime(28800, 0, "pool.ntp.org", "time.nist.gov"); // UTC+8
         
         struct tm timeinfo;
-        // 嘗試獲取時間 (這裡稍微等待一下，不會太久)
-        if (getLocalTime(&timeinfo, 100)) { // 100ms timeout
+        if (getLocalTime(&timeinfo, 100)) { 
             rtc.adjust(DateTime(timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday, 
                                 timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec));
             Serial.println("RTC Updated via WiFi");
             
-            // 斷開 WiFi 省電
             wifiSyncAttempted = true;
             WiFi.disconnect(true);
             WiFi.mode(WIFI_OFF);
         }
     }
     
-    // 超時檢查 (例如開機 15 秒後還沒連上，就放棄，用 DS3231)
     if (millis() - wifiStartTime > 15000) {
         Serial.println("WiFi Timeout. Using DS3231.");
         wifiSyncAttempted = true;
@@ -266,9 +260,6 @@ void handle_wifi_sync_in_loop() {
     }
 }
 
-// ----------------------------------------------------------------
-// 歷史數據儲存與讀取
-// ----------------------------------------------------------------
 void save_daily_data(int focusAddSec, int restAddSec) {
     DateTime now = rtc.now();
     char dateKey[12];
@@ -313,7 +304,6 @@ void load_history_to_ui(int year, int month, int day) {
     float focusHour = focusMin / 60.0;
     float restHour = restMin / 60.0;
 
-    // [修正2] 使用整數格式化顯示浮點數，解決 'f' 問題
     int fh_int = (int)focusHour;
     int fh_dec = (int)((focusHour - fh_int) * 10);
     
@@ -345,9 +335,6 @@ void load_history_from_dropdown(lv_event_t * e) {
     }
 }
 
-// ----------------------------------------------------------------
-// [實作] 自動焦點跳轉
-// ----------------------------------------------------------------
 void ui_event_auto_next(lv_event_t * e) {
     lv_event_code_t code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_target(e);
@@ -370,13 +357,9 @@ void run_splash_bar_animation() {
     }
 }
 
-// ----------------------------------------------------------------
-// Loop
-// ----------------------------------------------------------------
 void loop() {
     lv_timer_handler(); 
     
-    // [新增] 背景處理 WiFi 同步
     handle_wifi_sync_in_loop();
 
     if (isBuzzerActive) {
@@ -498,12 +481,39 @@ void reset_and_run_logic(lv_event_t * e) {
     update_timer_ui();
 }
 
+// -----------------------------------------------------
+// [重要修改] 提前退出時儲存時間邏輯
+// -----------------------------------------------------
 void exit_timer_logic(lv_event_t * e) {
+    // 檢查是否有正在進行的倒數，且時間有減少
+    if (isTimerRunning && initialTotalSeconds > remainingSeconds) {
+        long elapsedSeconds = initialTotalSeconds - remainingSeconds;
+        
+        // 確保時間合理
+        if (elapsedSeconds > 0) {
+            // 判斷目前是專注頁面還是休息頁面
+            if (ui_timer_Panel && !lv_obj_has_flag(ui_timer_Panel, LV_OBJ_FLAG_HIDDEN)) {
+                // 專注模式：記錄 Focus 時間
+                save_daily_data(elapsedSeconds, 0);
+            }
+            else if (ui_timer_Panel1 && !lv_obj_has_flag(ui_timer_Panel1, LV_OBJ_FLAG_HIDDEN)) {
+                // 休息模式：記錄 Rest 時間
+                save_daily_data(0, elapsedSeconds);
+            }
+        }
+    }
+
+    // 重置計時器狀態
     isTimerRunning = false;
+    isTimerPaused = false;
+    
+    // 隱藏相關面板
     if(ui_timer_Panel) lv_obj_add_flag(ui_timer_Panel, LV_OBJ_FLAG_HIDDEN);
     if(ui_timer_Panel1) lv_obj_add_flag(ui_timer_Panel1, LV_OBJ_FLAG_HIDDEN);
     if(ui_count_Panel) lv_obj_add_flag(ui_count_Panel, LV_OBJ_FLAG_HIDDEN);
     if(ui_time_stop_Panel) lv_obj_add_flag(ui_time_stop_Panel, LV_OBJ_FLAG_HIDDEN);
+    
+    // 顯示主選單
     if(ui_Menu_Panel) lv_obj_clear_flag(ui_Menu_Panel, LV_OBJ_FLAG_HIDDEN);
 }
 
@@ -711,7 +721,7 @@ void apply_group_focus(lv_obj_t * panel) {
         if(ui_Dropdown_moth) lv_group_add_obj(g_btn_group, ui_Dropdown_moth);
         if(ui_Dropdown_day)  lv_group_add_obj(g_btn_group, ui_Dropdown_day);
         if(ui_Button13)      lv_group_add_obj(g_btn_group, ui_Button13);
-        if(ui_Button12)      lv_group_add_obj(g_btn_group, ui_Button12); // [修正3] 加入退出鍵
+        if(ui_Button12)      lv_group_add_obj(g_btn_group, ui_Button12); 
         if(ui_Dropdown_year) lv_group_focus_obj(ui_Dropdown_year);
     }
     else if (panel == ui_system_Panel) {
