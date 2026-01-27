@@ -87,7 +87,7 @@ void exit_stopwatch_logic(lv_event_t * e);
 void slider_brightness_event(lv_event_t * e);
 void slider_volume_event(lv_event_t * e);
 void run_splash_bar_animation();
-void play_button_sound(); // 補上函式宣告
+void play_button_sound(); 
 
 // ----------------------------------------------------------------
 // Setup
@@ -145,6 +145,11 @@ void setup() {
     // 初始化 UI
     ui_init();
 
+    // --- [修正] 解決開機顯示 Time Set Panel 的問題 ---
+    // 強制隱藏 Time Set Panel，並確保 Main Panel 顯示
+    if(ui_time_set_Panel) lv_obj_add_flag(ui_time_set_Panel, LV_OBJ_FLAG_HIDDEN);
+    if(ui_Main_Panel) lv_obj_clear_flag(ui_Main_Panel, LV_OBJ_FLAG_HIDDEN);
+
     // Splash Screen 樣式修正
     if(ui_SplashScreen) {
         lv_obj_set_style_radius(ui_SplashScreen, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -159,17 +164,15 @@ void setup() {
     // 事件綁定 (Event Binding)
     // ------------------------------------------------------------
     
-    // Time Set Panel - [已刪除 Month Dropdown 綁定]
-    // if(ui_moth_Dropdown) lv_obj_add_event_cb(ui_moth_Dropdown, ui_event_auto_next, LV_EVENT_VALUE_CHANGED, NULL);
+    // Time Set Panel
+    // [修正] 已移除 ui_moth_Dropdown 的綁定
     if(ui_hour_Dropdown) lv_obj_add_event_cb(ui_hour_Dropdown, ui_event_auto_next, LV_EVENT_VALUE_CHANGED, NULL);
     if(ui_min_Dropdown)  lv_obj_add_event_cb(ui_min_Dropdown, ui_event_auto_next, LV_EVENT_VALUE_CHANGED, NULL);
     
-    // [新增] 綁定時間設定確認按鈕 (ui_Button6)
     if(ui_Button6) lv_obj_add_event_cb(ui_Button6, confirm_time_set_logic, LV_EVENT_CLICKED, NULL);
 
     // History Panel
     if(ui_Dropdown_year) lv_obj_add_event_cb(ui_Dropdown_year, ui_event_auto_next, LV_EVENT_VALUE_CHANGED, NULL);
-    // 注意：如果是 History 面板的 dropdown 沒刪，這行要保留；如果也刪了請註解掉
     if(ui_Dropdown_moth) lv_obj_add_event_cb(ui_Dropdown_moth, ui_event_auto_next, LV_EVENT_VALUE_CHANGED, NULL);
     if(ui_Dropdown_day)  lv_obj_add_event_cb(ui_Dropdown_day, ui_event_auto_next, LV_EVENT_VALUE_CHANGED, NULL);
 
@@ -194,7 +197,6 @@ void setup() {
     if(ui_back_Button2) lv_obj_add_event_cb(ui_back_Button2, reset_stopwatch_logic, LV_EVENT_CLICKED, NULL);  
     if(ui_out_Button2)  lv_obj_add_event_cb(ui_out_Button2, exit_stopwatch_logic, LV_EVENT_CLICKED, NULL);    
 
-    // [修改] Slider 範圍設定為 0-10
     if(ui_Slider1) {
         lv_obj_add_event_cb(ui_Slider1, slider_brightness_event, LV_EVENT_VALUE_CHANGED, NULL);
         lv_slider_set_range(ui_Slider1, 0, 10); 
@@ -209,6 +211,8 @@ void setup() {
         lv_slider_set_value(ui_Slider2, initVal, LV_ANIM_OFF);
         if(ui_Label16) lv_label_set_text_fmt(ui_Label16, "%d", initVal);
     }
+    
+    update_clock();
 }
 
 // ----------------------------------------------------------------
@@ -309,19 +313,15 @@ void play_button_sound() {
 // [修改] 時間設定邏輯 (確認鍵觸發)
 // ----------------------------------------------------------------
 void confirm_time_set_logic(lv_event_t * e) {
-    // int monthIndex = lv_dropdown_get_selected(ui_moth_Dropdown); // 已刪除
     int hourIndex = lv_dropdown_get_selected(ui_hour_Dropdown);
     int minIndex = lv_dropdown_get_selected(ui_min_Dropdown);
 
     DateTime now = rtc.now();
-    
-    // 月份: 因為 Dropdown 刪了，這裡改為沿用目前月份
     int newMonth = now.month();
     int newHour = hourIndex;
     int newMin = minIndex;
 
     rtc.adjust(DateTime(now.year(), newMonth, now.day(), newHour, newMin, 0));
-
     update_clock();
 }
 
@@ -393,19 +393,15 @@ void apply_group_focus(lv_obj_t * panel) {
         if(ui_stop_buttom) lv_group_focus_obj(ui_stop_buttom);
     }
     else if (panel == ui_time_set_Panel) {
-        // [已刪除 Month Dropdown]
-        // if(ui_moth_Dropdown) lv_group_add_obj(g_btn_group, ui_moth_Dropdown);
         if(ui_hour_Dropdown) lv_group_add_obj(g_btn_group, ui_hour_Dropdown);
         if(ui_min_Dropdown)  lv_group_add_obj(g_btn_group, ui_min_Dropdown);
         if(ui_Button6)       lv_group_add_obj(g_btn_group, ui_Button6); 
         if(ui_Button11)      lv_group_add_obj(g_btn_group, ui_Button11); 
         
-        // 焦點改為 Hour Dropdown
         if(ui_hour_Dropdown) lv_group_focus_obj(ui_hour_Dropdown);
     }
     else if (panel == ui_History_Panel) {
         if(ui_Dropdown_year) lv_group_add_obj(g_btn_group, ui_Dropdown_year);
-        // 如果歷史面板也有這個 month dropdown，請確認變數名稱（這裡假設是 ui_Dropdown_moth）
         if(ui_Dropdown_moth) lv_group_add_obj(g_btn_group, ui_Dropdown_moth);
         if(ui_Dropdown_day)  lv_group_add_obj(g_btn_group, ui_Dropdown_day);
         if(ui_Button13)      lv_group_add_obj(g_btn_group, ui_Button13); 
