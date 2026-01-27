@@ -5,7 +5,7 @@
 
 #include "ui.h"
 
-lv_obj_t *ui_Main_Screen = NULL;lv_obj_t *ui_Main_Panel = NULL;lv_obj_t *ui_timeLabel = NULL;lv_obj_t *ui_date_Label = NULL;lv_obj_t *ui_InButton = NULL;lv_obj_t *ui_Menu_Panel = NULL;lv_obj_t *ui_home_Button1 = NULL;lv_obj_t *ui_setting_Button4 = NULL;lv_obj_t *ui_tomato_Button2 = NULL;lv_obj_t *ui_history_Button3 = NULL;lv_obj_t *ui_menu_Label = NULL;lv_obj_t *ui_set_time_mode_Panel = NULL;lv_obj_t *ui_Button8 = NULL;lv_obj_t *ui_Button9 = NULL;lv_obj_t *ui_Button10 = NULL;lv_obj_t *ui_Label6 = NULL;lv_obj_t *ui_Label7 = NULL;lv_obj_t *ui_Label8 = NULL;lv_obj_t *ui_countdown_set_Panel = NULL;lv_obj_t *ui_Dropdown3 = NULL;lv_obj_t *ui_Label9 = NULL;lv_obj_t *ui_Image1 = NULL;lv_obj_t *ui_Button19 = NULL;lv_obj_t *ui_Label11 = NULL;lv_obj_t *ui_timer_Panel = NULL;lv_obj_t *ui_Arc1 = NULL;lv_obj_t *ui_Label5 = NULL;lv_obj_t *ui_stop_buttom = NULL;lv_obj_t *ui_back_Button = NULL;lv_obj_t *ui_out_Button = NULL;lv_obj_t *ui_time_stop_Panel = NULL;lv_obj_t *ui_Label30 = NULL;lv_obj_t *ui_Button16 = NULL;lv_obj_t *ui_Label37 = NULL;lv_obj_t *ui_Button17 = NULL;lv_obj_t *ui_Label38 = NULL;lv_obj_t *ui_timer_Panel1 = NULL;lv_obj_t *ui_Arc3 = NULL;lv_obj_t *ui_Label25 = NULL;lv_obj_t *ui_stop_buttom1 = NULL;lv_obj_t *ui_back_Button1 = NULL;lv_obj_t *ui_out_Button1 = NULL;lv_obj_t *ui_count_Panel = NULL;lv_obj_t *ui_stop_buttom2 = NULL;lv_obj_t *ui_back_Button2 = NULL;lv_obj_t *ui_out_Button2 = NULL;lv_obj_t *ui_Label10 = NULL;lv_obj_t *ui_setting_Panel = NULL;lv_obj_t *ui_Button1 = NULL;lv_obj_t *ui_Label1 = NULL;lv_obj_t *ui_Button2 = NULL;lv_obj_t *ui_Label3 = NULL;lv_obj_t *ui_Button3 = NULL;lv_obj_t *ui_Label4 = NULL;lv_obj_t *ui_Button4 = NULL;lv_obj_t *ui_Label12 = NULL;lv_obj_t *ui_Button5 = NULL;lv_obj_t *ui_Label13 = NULL;lv_obj_t *ui_light_set_Panel = NULL;lv_obj_t *ui_Panel4 = NULL;lv_obj_t *ui_Slider1 = NULL;lv_obj_t *ui_Label14 = NULL;lv_obj_t *ui_Label15 = NULL;lv_obj_t *ui_Button15 = NULL;lv_obj_t *ui_Label29 = NULL;lv_obj_t *ui_sound_set_Panel = NULL;lv_obj_t *ui_Panel1 = NULL;lv_obj_t *ui_Slider2 = NULL;lv_obj_t *ui_Label16 = NULL;lv_obj_t *ui_Label17 = NULL;lv_obj_t *ui_Button14 = NULL;lv_obj_t *ui_Label28 = NULL;lv_obj_t *ui_time_set_Panel = NULL;lv_obj_t *ui_Label19 = NULL;lv_obj_t *ui_Label20 = NULL;lv_obj_t *ui_Label22 = NULL;lv_obj_t *ui_Button6 = NULL;lv_obj_t *ui_Label23 = NULL;lv_obj_t *ui_Button11 = NULL;lv_obj_t *ui_Label24 = NULL;lv_obj_t *ui_hour_Dropdown = NULL;lv_obj_t *ui_min_Dropdown = NULL;lv_obj_t *ui_system_Panel = NULL;lv_obj_t *ui_Label21 = NULL;lv_obj_t *ui_Image2 = NULL;lv_obj_t *ui_Button7 = NULL;lv_obj_t *ui_Label26 = NULL;lv_obj_t *ui_History_Panel = NULL;lv_obj_t *ui_Label27 = NULL;lv_obj_t *ui_Label32 = NULL;lv_obj_t *ui_Label31 = NULL;lv_obj_t *ui_Button13 = NULL;lv_obj_t *ui_Label39 = NULL;lv_obj_t *ui_Dropdown_year = NULL;lv_obj_t *ui_Dropdown_moth = NULL;lv_obj_t *ui_Dropdown_day = NULL;lv_obj_t *ui_Arc2 = NULL;lv_obj_t *ui_Label33 = NULL;lv_obj_t *ui_Label34 = NULL;lv_obj_t *ui_Label35 = NULL;lv_obj_t *ui_Label36 = NULL;
+lv_obj_t *ui_Main_Screen = NULL;lv_obj_t *ui_Main_Panel = NULL;lv_obj_t *ui_timeLabel = NULL;lv_obj_t *ui_date_Label = NULL;lv_obj_t *ui_InButton = NULL;lv_obj_t *ui_Menu_Panel = NULL;lv_obj_t *ui_home_Button1 = NULL;lv_obj_t *ui_setting_Button4 = NULL;lv_obj_t *ui_tomato_Button2 = NULL;lv_obj_t *ui_history_Button3 = NULL;lv_obj_t *ui_menu_Label = NULL;lv_obj_t *ui_set_time_mode_Panel = NULL;lv_obj_t *ui_Button8 = NULL;lv_obj_t *ui_Button9 = NULL;lv_obj_t *ui_Button10 = NULL;lv_obj_t *ui_Label6 = NULL;lv_obj_t *ui_Label7 = NULL;lv_obj_t *ui_Label8 = NULL;lv_obj_t *ui_countdown_set_Panel = NULL;lv_obj_t *ui_Dropdown3 = NULL;lv_obj_t *ui_Label9 = NULL;lv_obj_t *ui_Image1 = NULL;lv_obj_t *ui_Button19 = NULL;lv_obj_t *ui_Label11 = NULL;lv_obj_t *ui_timer_Panel = NULL;lv_obj_t *ui_Arc1 = NULL;lv_obj_t *ui_Label5 = NULL;lv_obj_t *ui_stop_buttom = NULL;lv_obj_t *ui_back_Button = NULL;lv_obj_t *ui_out_Button = NULL;lv_obj_t *ui_time_stop_Panel = NULL;lv_obj_t *ui_Label30 = NULL;lv_obj_t *ui_Button16 = NULL;lv_obj_t *ui_Label37 = NULL;lv_obj_t *ui_Button17 = NULL;lv_obj_t *ui_Label38 = NULL;lv_obj_t *ui_timer_Panel1 = NULL;lv_obj_t *ui_Arc3 = NULL;lv_obj_t *ui_Label25 = NULL;lv_obj_t *ui_stop_buttom1 = NULL;lv_obj_t *ui_back_Button1 = NULL;lv_obj_t *ui_out_Button1 = NULL;lv_obj_t *ui_count_Panel = NULL;lv_obj_t *ui_stop_buttom2 = NULL;lv_obj_t *ui_back_Button2 = NULL;lv_obj_t *ui_out_Button2 = NULL;lv_obj_t *ui_Label10 = NULL;lv_obj_t *ui_setting_Panel = NULL;lv_obj_t *ui_Button1 = NULL;lv_obj_t *ui_Label1 = NULL;lv_obj_t *ui_Button2 = NULL;lv_obj_t *ui_Label3 = NULL;lv_obj_t *ui_Button3 = NULL;lv_obj_t *ui_Label4 = NULL;lv_obj_t *ui_Button4 = NULL;lv_obj_t *ui_Label12 = NULL;lv_obj_t *ui_Button5 = NULL;lv_obj_t *ui_Label13 = NULL;lv_obj_t *ui_light_set_Panel = NULL;lv_obj_t *ui_Panel4 = NULL;lv_obj_t *ui_Slider1 = NULL;lv_obj_t *ui_Label14 = NULL;lv_obj_t *ui_Label15 = NULL;lv_obj_t *ui_Button15 = NULL;lv_obj_t *ui_Label29 = NULL;lv_obj_t *ui_sound_set_Panel = NULL;lv_obj_t *ui_Panel1 = NULL;lv_obj_t *ui_Slider2 = NULL;lv_obj_t *ui_Label16 = NULL;lv_obj_t *ui_Label17 = NULL;lv_obj_t *ui_Button14 = NULL;lv_obj_t *ui_Label28 = NULL;lv_obj_t *ui_time_set_Panel = NULL;lv_obj_t *ui_Label19 = NULL;lv_obj_t *ui_Label20 = NULL;lv_obj_t *ui_Label22 = NULL;lv_obj_t *ui_Button6 = NULL;lv_obj_t *ui_Label23 = NULL;lv_obj_t *ui_Button11 = NULL;lv_obj_t *ui_Label24 = NULL;lv_obj_t *ui_hour_Dropdown = NULL;lv_obj_t *ui_min_Dropdown = NULL;lv_obj_t *ui_system_Panel = NULL;lv_obj_t *ui_Label21 = NULL;lv_obj_t *ui_Image2 = NULL;lv_obj_t *ui_Button7 = NULL;lv_obj_t *ui_Label26 = NULL;lv_obj_t *ui_History_Panel = NULL;lv_obj_t *ui_Label27 = NULL;lv_obj_t *ui_Label32 = NULL;lv_obj_t *ui_Label31 = NULL;lv_obj_t *ui_Button13 = NULL;lv_obj_t *ui_Label39 = NULL;lv_obj_t *ui_Dropdown_year = NULL;lv_obj_t *ui_Dropdown_moth = NULL;lv_obj_t *ui_Dropdown_day = NULL;lv_obj_t *ui_Arc2 = NULL;lv_obj_t *ui_Label33 = NULL;lv_obj_t *ui_Label34 = NULL;lv_obj_t *ui_Label35 = NULL;lv_obj_t *ui_Label36 = NULL;lv_obj_t *ui_Button12 = NULL;lv_obj_t *ui_Label18 = NULL;
 // event funtions
 void ui_event_Main_Panel( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);
@@ -233,7 +233,7 @@ if ( event_code == LV_EVENT_SCREEN_LOAD_START) {
 }
 }
 
-void ui_event_Button13( lv_event_t * e) {
+void ui_event_Button12( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);
 
 if ( event_code == LV_EVENT_CLICKED) {
@@ -1175,6 +1175,7 @@ ui_time_set_Panel = lv_obj_create(ui_Main_Screen);
 lv_obj_set_width( ui_time_set_Panel, 160);
 lv_obj_set_height( ui_time_set_Panel, 128);
 lv_obj_set_align( ui_time_set_Panel, LV_ALIGN_CENTER );
+lv_obj_add_flag( ui_time_set_Panel, LV_OBJ_FLAG_HIDDEN );   /// Flags
 lv_obj_clear_flag( ui_time_set_Panel, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 lv_obj_set_style_radius(ui_time_set_Panel, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_border_color(ui_time_set_Panel, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT );
@@ -1395,7 +1396,7 @@ ui_Button13 = lv_btn_create(ui_History_Panel);
 lv_obj_set_width( ui_Button13, 21);
 lv_obj_set_height( ui_Button13, 37);
 lv_obj_set_x( ui_Button13, 62 );
-lv_obj_set_y( ui_Button13, -35 );
+lv_obj_set_y( ui_Button13, -6 );
 lv_obj_set_align( ui_Button13, LV_ALIGN_CENTER );
 lv_obj_add_flag( ui_Button13, LV_OBJ_FLAG_SCROLL_ON_FOCUS );   /// Flags
 lv_obj_clear_flag( ui_Button13, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
@@ -1407,12 +1408,15 @@ lv_obj_set_style_border_opa(ui_Button13, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_shadow_color(ui_Button13, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_shadow_opa(ui_Button13, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_text_font(ui_Button13, &ui_font_Font4, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_style_radius(ui_Button13, 5, LV_PART_MAIN| LV_STATE_FOCUSED);
+lv_obj_set_style_bg_color(ui_Button13, lv_color_hex(0xFF7A00), LV_PART_MAIN | LV_STATE_FOCUSED );
+lv_obj_set_style_bg_opa(ui_Button13, 255, LV_PART_MAIN| LV_STATE_FOCUSED);
 
 ui_Label39 = lv_label_create(ui_Button13);
 lv_obj_set_width( ui_Label39, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( ui_Label39, LV_SIZE_CONTENT);   /// 1
 lv_obj_set_align( ui_Label39, LV_ALIGN_CENTER );
-lv_label_set_text(ui_Label39,"退\n出");
+lv_label_set_text(ui_Label39,"保\n存");
 lv_obj_set_style_text_color(ui_Label39, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_text_opa(ui_Label39, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_text_font(ui_Label39, &ui_font_Font4, LV_PART_MAIN| LV_STATE_DEFAULT);
@@ -1444,7 +1448,7 @@ lv_obj_set_style_text_opa(ui_Dropdown_moth, 255, LV_PART_MAIN| LV_STATE_DEFAULT)
 lv_obj_set_style_text_font(ui_Dropdown_moth, &lv_font_montserrat_8, LV_PART_MAIN| LV_STATE_DEFAULT);
 
 ui_Dropdown_day = lv_dropdown_create(ui_History_Panel);
-lv_dropdown_set_options( ui_Dropdown_day, "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n31" );
+lv_dropdown_set_options( ui_Dropdown_day, "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31" );
 lv_obj_set_width( ui_Dropdown_day, 40);
 lv_obj_set_height( ui_Dropdown_day, LV_SIZE_CONTENT);   /// 1
 lv_obj_set_x( ui_Dropdown_day, 27 );
@@ -1458,7 +1462,7 @@ lv_obj_set_style_text_font(ui_Dropdown_day, &lv_font_montserrat_8, LV_PART_MAIN|
 ui_Arc2 = lv_arc_create(ui_History_Panel);
 lv_obj_set_width( ui_Arc2, 60);
 lv_obj_set_height( ui_Arc2, 60);
-lv_obj_set_x( ui_Arc2, -36 );
+lv_obj_set_x( ui_Arc2, -43 );
 lv_obj_set_y( ui_Arc2, 25 );
 lv_obj_set_align( ui_Arc2, LV_ALIGN_CENTER );
 lv_arc_set_value(ui_Arc2, 0);
@@ -1479,7 +1483,7 @@ lv_obj_set_style_bg_opa(ui_Arc2, 0, LV_PART_KNOB| LV_STATE_DEFAULT);
 ui_Label33 = lv_label_create(ui_History_Panel);
 lv_obj_set_width( ui_Label33, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( ui_Label33, LV_SIZE_CONTENT);   /// 1
-lv_obj_set_x( ui_Label33, 35 );
+lv_obj_set_x( ui_Label33, 20 );
 lv_obj_set_y( ui_Label33, 18 );
 lv_obj_set_align( ui_Label33, LV_ALIGN_CENTER );
 lv_label_set_text(ui_Label33,"專注時長：\n\n休息時長：");
@@ -1490,8 +1494,8 @@ lv_obj_set_style_text_font(ui_Label33, &ui_font_Font10, LV_PART_MAIN| LV_STATE_D
 ui_Label34 = lv_label_create(ui_History_Panel);
 lv_obj_set_width( ui_Label34, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( ui_Label34, LV_SIZE_CONTENT);   /// 1
-lv_obj_set_x( ui_Label34, 46 );
-lv_obj_set_y( ui_Label34, 31 );
+lv_obj_set_x( ui_Label34, 31 );
+lv_obj_set_y( ui_Label34, 35 );
 lv_obj_set_align( ui_Label34, LV_ALIGN_CENTER );
 lv_label_set_text(ui_Label34,"小時\n\n小時");
 lv_obj_set_style_text_color(ui_Label34, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT );
@@ -1501,8 +1505,8 @@ lv_obj_set_style_text_font(ui_Label34, &ui_font_Font10, LV_PART_MAIN| LV_STATE_D
 ui_Label35 = lv_label_create(ui_History_Panel);
 lv_obj_set_width( ui_Label35, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( ui_Label35, LV_SIZE_CONTENT);   /// 1
-lv_obj_set_x( ui_Label35, 25 );
-lv_obj_set_y( ui_Label35, 17 );
+lv_obj_set_x( ui_Label35, 3 );
+lv_obj_set_y( ui_Label35, 19 );
 lv_obj_set_align( ui_Label35, LV_ALIGN_CENTER );
 lv_label_set_text(ui_Label35,"0.0");
 lv_obj_set_style_text_color(ui_Label35, lv_color_hex(0xFF9900), LV_PART_MAIN | LV_STATE_DEFAULT );
@@ -1512,13 +1516,42 @@ lv_obj_set_style_text_font(ui_Label35, &ui_font_Font10, LV_PART_MAIN| LV_STATE_D
 ui_Label36 = lv_label_create(ui_History_Panel);
 lv_obj_set_width( ui_Label36, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( ui_Label36, LV_SIZE_CONTENT);   /// 1
-lv_obj_set_x( ui_Label36, 25 );
-lv_obj_set_y( ui_Label36, 46 );
+lv_obj_set_x( ui_Label36, 3 );
+lv_obj_set_y( ui_Label36, 50 );
 lv_obj_set_align( ui_Label36, LV_ALIGN_CENTER );
 lv_label_set_text(ui_Label36,"0.0");
 lv_obj_set_style_text_color(ui_Label36, lv_color_hex(0x4A90E2), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_text_opa(ui_Label36, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_text_font(ui_Label36, &ui_font_Font10, LV_PART_MAIN| LV_STATE_DEFAULT);
+
+ui_Button12 = lv_btn_create(ui_History_Panel);
+lv_obj_set_width( ui_Button12, 21);
+lv_obj_set_height( ui_Button12, 37);
+lv_obj_set_x( ui_Button12, 62 );
+lv_obj_set_y( ui_Button12, 37 );
+lv_obj_set_align( ui_Button12, LV_ALIGN_CENTER );
+lv_obj_add_flag( ui_Button12, LV_OBJ_FLAG_SCROLL_ON_FOCUS );   /// Flags
+lv_obj_clear_flag( ui_Button12, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+lv_obj_set_style_radius(ui_Button12, 5, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_style_bg_color(ui_Button12, lv_color_hex(0xBCB9B9), LV_PART_MAIN | LV_STATE_DEFAULT );
+lv_obj_set_style_bg_opa(ui_Button12, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_style_border_color(ui_Button12, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT );
+lv_obj_set_style_border_opa(ui_Button12, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_style_shadow_color(ui_Button12, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT );
+lv_obj_set_style_shadow_opa(ui_Button12, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_style_text_font(ui_Button12, &ui_font_Font4, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_style_radius(ui_Button12, 5, LV_PART_MAIN| LV_STATE_FOCUSED);
+lv_obj_set_style_bg_color(ui_Button12, lv_color_hex(0xFF7A00), LV_PART_MAIN | LV_STATE_FOCUSED );
+lv_obj_set_style_bg_opa(ui_Button12, 255, LV_PART_MAIN| LV_STATE_FOCUSED);
+
+ui_Label18 = lv_label_create(ui_Button12);
+lv_obj_set_width( ui_Label18, LV_SIZE_CONTENT);  /// 1
+lv_obj_set_height( ui_Label18, LV_SIZE_CONTENT);   /// 1
+lv_obj_set_align( ui_Label18, LV_ALIGN_CENTER );
+lv_label_set_text(ui_Label18,"退\n出");
+lv_obj_set_style_text_color(ui_Label18, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT );
+lv_obj_set_style_text_opa(ui_Label18, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_style_text_font(ui_Label18, &ui_font_Font4, LV_PART_MAIN| LV_STATE_DEFAULT);
 
 lv_obj_add_event_cb(ui_InButton, ui_event_InButton, LV_EVENT_ALL, NULL);
 lv_obj_add_event_cb(ui_Main_Panel, ui_event_Main_Panel, LV_EVENT_ALL, NULL);
@@ -1544,7 +1577,7 @@ lv_obj_add_event_cb(ui_Button15, ui_event_Button15, LV_EVENT_ALL, NULL);
 lv_obj_add_event_cb(ui_Button14, ui_event_Button14, LV_EVENT_ALL, NULL);
 lv_obj_add_event_cb(ui_Button11, ui_event_Button11, LV_EVENT_ALL, NULL);
 lv_obj_add_event_cb(ui_Button7, ui_event_Button7, LV_EVENT_ALL, NULL);
-lv_obj_add_event_cb(ui_Button13, ui_event_Button13, LV_EVENT_ALL, NULL);
+lv_obj_add_event_cb(ui_Button12, ui_event_Button12, LV_EVENT_ALL, NULL);
 lv_obj_add_event_cb(ui_History_Panel, ui_event_History_Panel, LV_EVENT_ALL, NULL);
 
 }
@@ -1655,5 +1688,7 @@ ui_Label33= NULL;
 ui_Label34= NULL;
 ui_Label35= NULL;
 ui_Label36= NULL;
+ui_Button12= NULL;
+ui_Label18= NULL;
 
 }

@@ -129,7 +129,6 @@ extern lv_obj_t *ui_History_Panel;
 extern lv_obj_t *ui_Label27;
 extern lv_obj_t *ui_Label32;
 extern lv_obj_t *ui_Label31;
-extern void ui_event_Button13( lv_event_t * e);
 extern lv_obj_t *ui_Button13;
 extern lv_obj_t *ui_Label39;
 extern lv_obj_t *ui_Dropdown_year;
@@ -140,6 +139,9 @@ extern lv_obj_t *ui_Label33;
 extern lv_obj_t *ui_Label34;
 extern lv_obj_t *ui_Label35;
 extern lv_obj_t *ui_Label36;
+extern void ui_event_Button12( lv_event_t * e);
+extern lv_obj_t *ui_Button12;
+extern lv_obj_t *ui_Label18;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus
