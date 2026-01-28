@@ -9,6 +9,10 @@
 
 #include "ui/ui.h"
 
+// --- [宣告 GIF 圖片資源] ---
+// 請確保您的 .c 檔內容開頭是 GIF 檔案標頭 (0x47, 0x49, 0x46...)
+LV_IMG_DECLARE(snoopy_sigh_ezgif);
+
 // --- 使用者設定 ---
 const char* ssid     = "TP-LINK_E1C0";
 const char* password = "88888888";
@@ -99,11 +103,48 @@ void load_history_to_ui(int year, int month, int day);
 void load_history_from_dropdown(lv_event_t * e);
 void handle_wifi_sync_in_loop();
 
+// 恢復原廠相關函式宣告
+void factory_reset_logic(lv_event_t * e);
+void cancel_reset_logic(lv_event_t * e);
+
+// ----------------------------------------------------------------
+// [GIF 建立 helper 函式] (支援 X, Y 座標調整)
+// ----------------------------------------------------------------
+void create_gif_on_panel(lv_obj_t* parent, const void* src, int x_offset, int y_offset) {
+    if (parent == NULL) return;
+    
+    // 建立前檢查記憶體 (除錯用)
+    Serial.printf("Before GIF Create - Free: %d, MaxBlock: %d\n", ESP.getFreeHeap(), ESP.getMaxAllocHeap());
+
+    lv_obj_t * gif = lv_gif_create(parent);
+    if (gif != NULL) {
+        lv_gif_set_src(gif, src);
+        lv_obj_add_flag(gif, LV_OBJ_FLAG_FLOATING); // 避免 Layout 擠壓
+        lv_obj_clear_flag(gif, LV_OBJ_FLAG_HIDDEN);
+        
+        // 設定位置：
+        // X: 正數往右，負數往左
+        // Y: 正數往下，負數往上
+        lv_obj_align(gif, LV_ALIGN_CENTER, x_offset, y_offset);
+        
+        lv_obj_move_foreground(gif); // 確保在最上層
+        Serial.println("GIF created successfully on panel.");
+    } else {
+        Serial.println("GIF creation failed! (Out of memory or bad source)");
+    }
+}
+
 // ----------------------------------------------------------------
 // Setup
 // ----------------------------------------------------------------
 void setup() {
     Serial.begin(115200);
+    
+    // --- [新增] 開機時印出初始記憶體狀態 ---
+    Serial.println("\n\n--- System Booting ---");
+    Serial.printf("Total Heap: %d bytes\n", ESP.getHeapSize());
+    Serial.printf("Initial Free Heap: %d bytes\n", ESP.getFreeHeap());
+    Serial.println("----------------------");
 
     pinMode(BTN_PREV, INPUT_PULLUP);
     pinMode(BTN_NEXT, INPUT_PULLUP);
@@ -119,7 +160,6 @@ void setup() {
 
     if (!rtc.begin()) { Serial.println("Couldn't find RTC"); }
     
-    // 確保有初始時間 (若 RTC 掉電)
     if (rtc.lostPower()) {
         rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
     }
@@ -164,6 +204,23 @@ void setup() {
     }
     
     run_splash_bar_animation();
+
+    // -------------------------------------------------------------
+    // [設定 GIF 位置] - 修正為顯示在 Count Panel (碼表頁面)
+    // -------------------------------------------------------------
+    Serial.println("Attempting to create GIF on Count Panel...");
+    
+    // [修改] 將 ui_Main_Panel 改為 ui_count_Panel
+    if (ui_count_Panel) {
+        // 參數：(面板, 圖片來源, X座標, Y座標)
+        // X: 0 是中間, 正數往右, 負數往左
+        // Y: 0 是中間, 正數往下, 負數往上
+        // 目前設定：X=0 (置中), Y=20 (往下移一點，避免擋到上面的數字)
+        create_gif_on_panel(ui_count_Panel, &snoopy_sigh_ezgif, -30, -15);
+    } 
+    else {
+        Serial.println("Error: ui_count_Panel not found!");
+    }
 
     // 先啟動 WiFi 連線，但不等待
     WiFi.begin(ssid, password);
@@ -210,7 +267,7 @@ void setup() {
 
     if(ui_stop_buttom2) lv_obj_add_event_cb(ui_stop_buttom2, toggle_stopwatch_logic, LV_EVENT_CLICKED, NULL); 
     if(ui_back_Button2) lv_obj_add_event_cb(ui_back_Button2, reset_stopwatch_logic, LV_EVENT_CLICKED, NULL);  
-    if(ui_out_Button2)  lv_obj_add_event_cb(ui_out_Button2, exit_stopwatch_logic, LV_EVENT_CLICKED, NULL);    
+    if(ui_out_Button2)  lv_obj_add_event_cb(ui_out_Button2, exit_stopwatch_logic, LV_EVENT_CLICKED, NULL);     
 
     if(ui_Slider1) {
         lv_obj_add_event_cb(ui_Slider1, slider_brightness_event, LV_EVENT_VALUE_CHANGED, NULL);
@@ -226,6 +283,11 @@ void setup() {
         lv_slider_set_value(ui_Slider2, initVal, LV_ANIM_OFF);
         if(ui_Label16) lv_label_set_text_fmt(ui_Label16, "%d", initVal);
     }
+
+    // 綁定恢復原廠按鈕事件 (綁定到 Button20)
+    if(ui_Button20) lv_obj_add_event_cb(ui_Button20, factory_reset_logic, LV_EVENT_CLICKED, NULL);
+    // 綁定取消按鈕 (Button22)
+    if(ui_Button22) lv_obj_add_event_cb(ui_Button22, cancel_reset_logic, LV_EVENT_CLICKED, NULL);
     
     update_clock();
 }
@@ -237,11 +299,10 @@ void handle_wifi_sync_in_loop() {
     if (wifiSyncAttempted) return;
 
     if (WiFi.status() == WL_CONNECTED) {
-        Serial.println("WiFi Connected! Syncing NTP...");
         configTime(28800, 0, "pool.ntp.org", "time.nist.gov"); // UTC+8
         
         struct tm timeinfo;
-        if (getLocalTime(&timeinfo, 100)) { 
+        if (getLocalTime(&timeinfo, 10)) { // 縮短等待時間
             rtc.adjust(DateTime(timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday, 
                                 timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec));
             Serial.println("RTC Updated via WiFi");
@@ -335,6 +396,32 @@ void load_history_from_dropdown(lv_event_t * e) {
     }
 }
 
+// 恢復原廠邏輯 (刪除所有紀錄)
+void factory_reset_logic(lv_event_t * e) {
+    // 1. 清除 Preferences 中的所有歷史紀錄
+    prefs.begin("history", false);
+    prefs.clear(); 
+    prefs.end();
+
+    // 2. 刷新介面顯示歸零
+    DateTime now = rtc.now();
+    load_history_to_ui(now.year(), now.month(), now.day());
+
+    // 3. 關閉確認視窗，回到設置頁面
+    if(ui_time_stop_Panel2) lv_obj_add_flag(ui_time_stop_Panel2, LV_OBJ_FLAG_HIDDEN);
+    if(ui_setting_Panel) lv_obj_clear_flag(ui_setting_Panel, LV_OBJ_FLAG_HIDDEN);
+    
+    // 4. 提示音
+    trigger_buzzer(500); 
+    Serial.println("Factory Reset Complete: History Cleared");
+}
+
+// 取消恢復原廠
+void cancel_reset_logic(lv_event_t * e) {
+    if(ui_time_stop_Panel2) lv_obj_add_flag(ui_time_stop_Panel2, LV_OBJ_FLAG_HIDDEN);
+    if(ui_setting_Panel) lv_obj_clear_flag(ui_setting_Panel, LV_OBJ_FLAG_HIDDEN);
+}
+
 void ui_event_auto_next(lv_event_t * e) {
     lv_event_code_t code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_target(e);
@@ -378,6 +465,27 @@ void loop() {
     if (millis() - lastClockUpdate > 1000) {
         lastClockUpdate = millis();
         update_clock();
+    }
+
+    // -------------------------------------------------------------
+    // [RAM Monitor]
+    // -------------------------------------------------------------
+    static unsigned long lastMemCheck = 0;
+    if (millis() - lastMemCheck > 3000) {
+        lastMemCheck = millis();
+        uint32_t freeHeap = ESP.getFreeHeap();
+        uint32_t minFreeHeap = ESP.getMinFreeHeap(); 
+        uint32_t maxAllocHeap = ESP.getMaxAllocHeap();
+
+        Serial.printf("--- [RAM Monitor] ---\n");
+        Serial.printf("Free Heap:      %d bytes (%.2f KB)\n", freeHeap, freeHeap/1024.0);
+        Serial.printf("Min Free Heap:  %d bytes (History Lowest)\n", minFreeHeap);
+        Serial.printf("Max Alloc Blk:  %d bytes (Largest Block)\n", maxAllocHeap);
+        
+        if (freeHeap < 20000) {
+            Serial.println("!!! WARNING: Low Memory !!!");
+        }
+        Serial.println("---------------------");
     }
 
     if (isTimerRunning && !isTimerPaused) {
@@ -481,9 +589,6 @@ void reset_and_run_logic(lv_event_t * e) {
     update_timer_ui();
 }
 
-// -----------------------------------------------------
-// [重要修改] 提前退出時儲存時間邏輯
-// -----------------------------------------------------
 void exit_timer_logic(lv_event_t * e) {
     // 檢查是否有正在進行的倒數，且時間有減少
     if (isTimerRunning && initialTotalSeconds > remainingSeconds) {
@@ -668,6 +773,8 @@ void check_and_update_focus() {
     lv_obj_t * target = NULL;
 
     if (ui_time_stop_Panel && !lv_obj_has_flag(ui_time_stop_Panel, LV_OBJ_FLAG_HIDDEN)) target = ui_time_stop_Panel;
+    // [新增] 檢查恢復原廠確認面板
+    else if (ui_time_stop_Panel2 && !lv_obj_has_flag(ui_time_stop_Panel2, LV_OBJ_FLAG_HIDDEN)) target = ui_time_stop_Panel2;
     else if (ui_countdown_set_Panel && !lv_obj_has_flag(ui_countdown_set_Panel, LV_OBJ_FLAG_HIDDEN)) target = ui_countdown_set_Panel;
     else if (ui_timer_Panel && !lv_obj_has_flag(ui_timer_Panel, LV_OBJ_FLAG_HIDDEN)) target = ui_timer_Panel;
     else if (ui_timer_Panel1 && !lv_obj_has_flag(ui_timer_Panel1, LV_OBJ_FLAG_HIDDEN)) target = ui_timer_Panel1;
@@ -692,7 +799,14 @@ void apply_group_focus(lv_obj_t * panel) {
     lv_group_remove_all_objs(g_btn_group); 
     lv_group_set_editing(g_btn_group, false); 
     
-    if (panel == ui_time_stop_Panel) {
+    // [新增] 恢復原廠確認面板的按鍵導航
+    if (panel == ui_time_stop_Panel2) {
+        if(ui_Button22) lv_group_add_obj(g_btn_group, ui_Button22);
+        if(ui_Button20) lv_group_add_obj(g_btn_group, ui_Button20);
+        // 預設聚焦在"取消" (Button22?) 或 "確認" (Button20)，這裡先聚焦 Button22
+        if(ui_Button22) lv_group_focus_obj(ui_Button22);
+    }
+    else if (panel == ui_time_stop_Panel) {
         if(ui_Button16) lv_group_add_obj(g_btn_group, ui_Button16);
         if(ui_Button17) lv_group_add_obj(g_btn_group, ui_Button17);
         if(ui_Button16) lv_group_focus_obj(ui_Button16);
@@ -771,6 +885,7 @@ void apply_group_focus(lv_obj_t * panel) {
         if(ui_Button3) lv_group_add_obj(g_btn_group, ui_Button3);
         if(ui_Button4) lv_group_add_obj(g_btn_group, ui_Button4);
         if(ui_Button5) lv_group_add_obj(g_btn_group, ui_Button5);
+        if(ui_Button18) lv_group_add_obj(g_btn_group, ui_Button18); // 恢復原廠按鈕
         if(ui_Button1) lv_group_add_obj(g_btn_group, ui_Button1);
         if(ui_Button2) lv_group_focus_obj(ui_Button2);
     }
